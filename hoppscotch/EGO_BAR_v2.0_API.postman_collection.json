@@ -1,0 +1,365 @@
+{
+  "info": {
+    "name": "EGO BAR API v2.0",
+    "description": "Colección Hoppscotch para Neon/Render. Resend es solo para el Administrador principal; otros Administradores activan token de un uso y luego ingresan con contraseña.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://ego-bar-backend.onrender.com"
+    },
+    {
+      "key": "adminEmail",
+      "value": "correo-admin@example.com"
+    },
+    {
+      "key": "controllerEmail",
+      "value": "controlador@example.com"
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "controllerToken",
+      "value": ""
+    },
+    {
+      "key": "activationCode",
+      "value": ""
+    },
+    {
+      "key": "credentialToken",
+      "value": "TOKEN_QR_DE_PRUEBA"
+    },
+    {
+      "key": "newAdminEmail",
+      "value": "nuevo-admin@example.com"
+    },
+    {
+      "key": "newAdminFirstName",
+      "value": "Nombre"
+    },
+    {
+      "key": "newAdminLastName",
+      "value": "Apellido"
+    },
+    {
+      "key": "adminActivationToken",
+      "value": ""
+    },
+    {
+      "key": "newAdminPassword",
+      "value": "CambiarEstaClave123!"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "02 - Solicitar código Admin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/request-code"
+      }
+    },
+    {
+      "name": "03 - Verificar código Admin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"code\": \"123456\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/verify-code"
+      }
+    },
+    {
+      "name": "04 - Mi sesión Admin",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/me"
+      }
+    },
+    {
+      "name": "05 - Listar usuarios",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/users"
+      }
+    },
+    {
+      "name": "06A - Crear Administrador y generar token WhatsApp",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/administrators",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{newAdminEmail}}\",\n  \"firstName\": \"{{newAdminFirstName}}\",\n  \"lastName\": \"{{newAdminLastName}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "06B - Regenerar token de Administrador",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/administrators/{{newAdminEmail}}/token"
+      }
+    },
+    {
+      "name": "06C - Activar cuenta de Administrador (sin sesión)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/activate-admin",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{newAdminEmail}}\",\n  \"token\": \"{{adminActivationToken}}\",\n  \"password\": \"{{newAdminPassword}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "06D - Iniciar sesión Administrador con contraseña",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/admin-login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{newAdminEmail}}\",\n  \"password\": \"{{newAdminPassword}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "06E - Listar Administradores",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/administrators"
+      }
+    },
+    {
+      "name": "06 - Crear Controlador y generar código",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Nombre\",\n  \"lastName\": \"Apellido\",\n  \"email\": \"{{controllerEmail}}\"\n}"
+        },
+        "url": "{{baseUrl}}/admin/controllers"
+      }
+    },
+    {
+      "name": "07 - Activar Controlador",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{controllerEmail}}\",\n  \"code\": \"{{activationCode}}\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/activate-controller"
+      }
+    },
+    {
+      "name": "08 - Crear credencial",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"{{credentialToken}}\",\n  \"name\": \"Invitado de prueba\",\n  \"event\": \"Evento de prueba\",\n  \"date\": \"2026-11-01\",\n  \"type\": \"Access Card\",\n  \"benefits\": [\"Ingreso\"],\n  \"isInvite\": false\n}"
+        },
+        "url": "{{baseUrl}}/admin/credentials"
+      }
+    },
+    {
+      "name": "09 - Listar credenciales",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/credentials?limit=100&offset=0"
+      }
+    },
+    {
+      "name": "10 - Consultar credencial privada",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{controllerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/private/credentials/{{credentialToken}}"
+      }
+    },
+    {
+      "name": "11 - Registrar escaneo QR",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{controllerToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": "{{baseUrl}}/private/credentials/{{credentialToken}}/scan"
+      }
+    },
+    {
+      "name": "12 - Historial propio Controlador",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{controllerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/controller/entries"
+      }
+    },
+    {
+      "name": "13 - Estadísticas Admin",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/statistics"
+      }
+    },
+    {
+      "name": "14 - Historial general Admin",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/entries?limit=50"
+      }
+    },
+    {
+      "name": "15 - Verificar bloqueo Admin para Controlador (debe dar 403)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{controllerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/admin/statistics"
+      }
+    }
+  ]
+}
