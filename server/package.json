@@ -1,0 +1,26 @@
+{
+  "name": "ego-bar-backend",
+  "version": "2.0.0",
+  "private": true,
+  "description": "API EGO BAR v2.0 con PostgreSQL/Neon, roles y control de accesos",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "check": "node --check src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "zod": "^3.24.2",
+    "bcryptjs": "^2.4.3"
+  }
+}
