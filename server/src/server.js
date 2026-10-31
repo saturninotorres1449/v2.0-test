@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const express = require('express');
@@ -1099,4 +1098,3 @@ start().catch(error => {
   console.error('No se pudo iniciar EGO BAR API:', error);
   process.exit(1);
 });
-                              
